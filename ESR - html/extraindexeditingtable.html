@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <title>ESR</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body onload="getAll()">
+
+<div class="jumbotron text-center">
+    <h1>ESR</h1>
+    <p>Esports Rep</p>
+</div>
+
+<h2 style="margin-left: 10px">Teams</h2>
+
+<p style="margin-left: 10px">Type something below to search for teams by name, game, platform, genre or description!</p>
+  <input class="form-control" id="myInput" type="text" placeholder="Search..." style="margin:auto; width: 95%">            
+  <table class="table table-hover" id="clientstable" margin="auto" cellpadding="5" style="margin:auto; width: 95%">
+    <thead>  
+        <tr>
+            <th> ID </th>
+            <th> Team Name </th>
+            <th> Game </th> 
+            <th> Platform </th>
+            <th> Genre </th>
+            <th> Description </th>
+            <th> Actions </th>
+        </tr>
+    </thead>
+    <tbody>
+        <td> </td>
+        <td> <input type="text" class="form-control-plaintext" id="clientnameinput"> </td>
+        <td> <input type="text" class="form-control-plaintext" id="gamenameinput"> </td>
+        <td> <input type="text" class="form-control-plaintext" id="platformnameinput"> </td>
+        <td> <input type="text" class="form-control-plaintext" id="genreinput"> </td>
+        <td> <input type="text" class="form-control-plaintext" id="descriptioninput"> </td>
+        <td> <button type="button" class="btn btn-success" id="create" onclick="return create()">Create</button> </td>
+    </tbody>
+  </table>
+</body>
+
+<script>
+  $(document).ready(function(){
+    $("#myInput").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#clientstable tr").filter(function() { 
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+</script>
+
+<script>
+
+  async function create(){
+    const url = 'http://localhost:8080/save3';
+        params = {
+            client_name: document.getElementById("clientnameinput").value,
+            game: document.getElementById("gamenameinput").value,
+            platform: document.getElementById("platformnameinput").value,
+            genre: document.getElementById("genreinput").value,
+            description: document.getElementById("descriptioninput").value,
+        }
+    let res = await axios.post(url, params);
+    window.location.replace("extraindexeditingtable.html");
+  }
+
+  async function getAll(){
+    const url = 'http://localhost:8080/allTeams';
+      let clients = await axios.get(url)
+      clients = clients.data;
+      
+      for(let i=0; i<clients.length; i++){
+          let clientstable = document.getElementById("clientstable");
+          let tablerow = document.createElement("tr");
+          let client_id = document.createElement("td");
+          let client_name = document.createElement("td");
+          let game = document.createElement("td");
+          let platform = document.createElement("td");
+          let genre = document.createElement("td");
+          let description = document.createElement("td");
+          let actions = document.createElement("td");
+          let update = document.createElement("button");
+          let remove = document.createElement("button");
+
+          update.innerText = "Update";
+          update.setAttribute("class", "btn btn-info");
+          
+          remove.innerText = "Delete";
+          remove.setAttribute("class", "btn btn-danger");
+
+          update.onclick = "return delete()";
+
+          remove.onclick = function() { 
+              const url = 'http://localhost:8080/delete/'+client_id;
+              axios.delete(url, {data: { id: client_id }});
+              var client_id = document.getElementById 
+              let classList = document.getElementById('clientstable');
+              let client = document.getElementById('client_name' + id);
+                          classList.removeChild(client);
+              var todelete = document.getElementById("deletethis").value;
+
+          };
+
+          actions.appendChild(update);
+          actions.appendChild(remove);
+          tablerow.appendChild(client_id);
+          tablerow.appendChild(client_name);
+          tablerow.appendChild(game);
+          tablerow.appendChild(platform);
+          tablerow.appendChild(genre);
+          tablerow.appendChild(description);
+          tablerow.appendChild(actions);
+          clientstable.appendChild(tablerow);
+
+          client_id.innerHTML = clients[i].client_id;
+          client_name.innerHTML = clients[i].client_name;
+          game.innerHTML = clients[i].game;
+          platform.innerHTML = clients[i].platform;
+          genre.innerHTML = clients[i].genre;
+          description.innerHTML = clients[i].description;
+      }
+  }
+
+  async function remove(){
+    const url = 'http://localhost:8080/delete/1';
+    axios.delete(url, {data: { id: id }});
+    let classList = document.getElementById('clientstable');
+    var todelete = document.getElementById(client_id).value;
+    let client = document.getElementById('client_name' + id);
+                classList.removeChild(client);
+  }
+</script>
+
+<script>
+
+</script>
+</html>

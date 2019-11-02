@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>ESR</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <style>
+      .center {
+        text-align:center;
+      }
+      </style>
+</head>
+<body onload="getAll()">
+  <div class="jumbotron text-center">
+  <h1>ESR</h1>
+  <p>Esports Rep</p>
+</div>
+  
+<div class="container">
+  <h2>Teams</h2>
+  <p>Type something below to search for teams by name, game, platform, genre or description!</p>
+  <input class="form-control" id="myInput" type="text" placeholder="Search..">            
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Team Name</th>
+        <th>Game</th>
+        <th>Platform</th>
+        <th>Genre</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody id="myTable">
+      <tr>
+        <td>fillerTeam1</td>
+        <td>fillerGame</td>
+        <td>Xbox</td>
+        <td>fillerGenre</td>
+        <td>fillerDescription</td>
+      </tr>
+      <tr>
+        <td>fillerTeam2</td>
+        <td>fillerGame</td>
+        <td>PS4</td>
+        <td>fillerGenre</td>
+        <td>fillerDescription</td>
+      </tr>
+      <tr>
+        <td>fillerTeam3</td>
+        <td>CoD</td>
+        <td>PS4</td>
+        <td>fillerGenre</td>
+        <td>fillerDescription</td>
+      </tr>
+      <tr>
+          <td>fillerTeam3</td>
+          <td>FIFA</td>
+          <td>Xbox</td>
+          <td>fillerGenre</td>
+          <td>fillerDescriptionwhathappensifiputloadsandloadsoftext</td>
+        </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="center">
+<button type="button" class="btn btn-success btn-lrg" >Create</button>
+<button type="button" class="btn btn-info">Update</button>
+<button type="button" class="btn btn-danger">Delete</button>
+</div>
+<br>
+
+<link rel="stylesheet" href="css/styles.css">
+    <p style="text-align:center;"><img src="images/logo.png" alt="Logo" width="150px" height="75px">
+    <p style="text-align:center;"><lp1>Who's on site right now?</lp1></p>
+    <table id="visitorstable" align="center" cellpadding="10">
+      <tr>
+        <th> <lp1> Team Name </lp1></th>
+        <th> <lp1> Game </lp1></th> 
+        <th> <lp1> Platform </lp1> </th>
+        <th> <lp1> Genre </lp1> </th>
+        <th> <lp1> Description </lp1> </th> 
+      </tr>
+    </table>
+
+</body>
+
+<script>
+    $(document).ready(function(){
+      $("#myInput").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#myTable tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    });
+
+</script>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script> 
+
+<script>
+    async function getAll(){
+      const url = 'http://localhost:8080/allTeams';
+        let clients = await axios.get(url)
+        clients = client.data;
+        
+        for(let i=0; i<clients.length; i++){
+          let clientsstable = document.getElementById("visitorstable");
+          let tablerow = document.createElement("tr");
+          let clientname = document.createElement("td");
+          clientname.classList.add("tablEntry");
+          let game = document.createElement("td");
+          game.classList.add("tablEntry");
+          let platform = document.createElement("td");
+          platform.classList.add("tablEntry");
+          let genre = document.createElement("td");
+          genre.classList.add("tablEntry");
+          let description = document.createElement("td");
+          description.classList.add("tablEntry");
+          tablerow.appendChild(clientname);
+          tablerow.appendChild(game);
+          tablerow.appendChild(platform);
+          tablerow.appendChild(genre);
+          tablerow.appendChild(description);
+          clientstable.appendChild(tablerow);
+        clientname.innerHTML = clients[i].clientname;
+        game.innerHTML = clients[i].game
+        platform.innerHTML = clients[i].platform;
+        genre.innerHTML = clients[i].genre;
+        description.innerHTML = clients[i].description;
+        }
+    }
+
+    
+    </script>
+
+
+</html>

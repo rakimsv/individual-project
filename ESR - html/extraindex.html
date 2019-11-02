@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>ESR</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script> 
+  <style>
+      .center {
+        text-align:center;
+      }
+      </style>
+</head>
+<body onload="getAll()">
+  <div class="jumbotron text-center">
+  <h1>ESR</h1>
+  <p>Esports Rep</p>
+</div>
+
+<div class="center">
+<button type="button" class="btn btn-success btn-lrg" >Create</button>
+<button type="button" class="btn btn-info">Update</button>
+<button type="button" class="btn btn-danger">Delete</button>
+</div>
+<br>
+
+<h2>Teams Table</h2>
+<p>Type something below to search for teams by name, game, platform, genre or description!</p>
+  <input class="form-control" id="myInput" type="text" placeholder="Search..">            
+  <table class="table table-hover" id="clientstable" align="center" cellpadding="10">
+      <tr>
+        <th> <lp1> Team Name </lp1></th>
+        <th> <lp1> Game </lp1></th> 
+        <th> <lp1> Platform </lp1> </th>
+        <th> <lp1> Genre </lp1> </th>
+        <th> <lp1> Description </lp1> </th> 
+      </tr>
+  </table>
+</body>
+
+<script>
+  $(document).ready(function(){
+    $("#myInput").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#clientstable tr").filter(function() { 
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+</script>
+
+<script>
+    async function getAll(){
+      const url = 'http://localhost:8080/allTeams';
+        let clients = await axios.get(url)
+        clients = clients.data;
+        
+        for(let i=0; i<clients.length; i++){
+          let clientstable = document.getElementById("clientstable");
+          let tablerow = document.createElement("tr");
+          let client_name = document.createElement("td");
+          client_name.classList.add("tablEntry");
+          let game = document.createElement("td");
+          game.classList.add("tablEntry");
+          let platform = document.createElement("td");
+          platform.classList.add("tablEntry");
+          let genre = document.createElement("td");
+          genre.classList.add("tablEntry");
+          let description = document.createElement("td");
+          description.classList.add("tablEntry");
+          tablerow.appendChild(client_name);
+          tablerow.appendChild(game);
+          tablerow.appendChild(platform);
+          tablerow.appendChild(genre);
+          tablerow.appendChild(description);
+          clientstable.appendChild(tablerow);
+        client_name.innerHTML = clients[i].client_name;
+        game.innerHTML = clients[i].game
+        platform.innerHTML = clients[i].platform;
+        genre.innerHTML = clients[i].genre;
+        description.innerHTML = clients[i].description;
+        }
+    }
+    </script>
+</html>
